@@ -10,7 +10,7 @@ Clemens Büchner <clemens.buechner@unibas.ch>, and Patrick Ferber <patrick.ferbe
 The PDDL domain and the problem generator has been dedicated to the
 [public domain](https://en.wikipedia.org/wiki/Public_domain) by the authors.
 
-The optimal solver is a work of Michael Reid <reid@math.ucf.edu> ...
+The optimal solver is a work of Michael Reid <reid@math.ucf.edu> [1]
 
 Generator and optimal planner was adapted from the code provided in
 https://github.com/BharathMuppasani/Rubiks-Cube-IPC-Submission licensed under
@@ -38,3 +38,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+[1] https://www.cflmath.com/~reid/Rubik/optimal_solver.html
