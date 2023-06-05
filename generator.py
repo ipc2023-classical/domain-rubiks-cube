@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import random
 import getopt
+
+SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
 def cubeInit():
     red='red'
@@ -211,8 +214,8 @@ def genRandomState(moves_to_shuffle, actions):
 
 def toPddl(CC, problem_name):
     init_facts = toPddlState(CC)
-
-    problem_pddl = '''(define
+    init = '\n    '.join(init_facts)
+    problem_pddl = f'''(define
 (problem {problem_name})
 (:domain rubiks-cube)
 (:objects yellow white blue green orange red)
@@ -248,13 +251,12 @@ def toPddl(CC, problem_name):
     )
 )
 )
-'''.format(problem_name = problem_name, init = '\n    '.join(init_facts))
+'''
     return problem_pddl
 
 def generate(moves_to_shuffle, actions):
     CC, gen_actions = genRandomState(moves_to_shuffle, actions)
     pddl = toPddl(CC, 'rubiks-cube-shuffle-{0}'.format(moves_to_shuffle))
-    print(gen_actions)
 
     plan_actions = []
     for a in gen_actions[::-1]:
@@ -265,19 +267,28 @@ def generate(moves_to_shuffle, actions):
     plan = '(' + ')\n('.join(plan_actions) + ')\n'
     return pddl, plan
 
+def solve(in_pddl, out_plan):
+    cmd = f'python3 {SCRIPTDIR}/optimal-solver/pddl-to-solver-input.py {in_pddl}'
+    cmd += f' | {SCRIPTDIR}/optimal-solver/optimal-solver >{out_plan}'
+    os.system(cmd)
+
 def usage():
     print('Usage: {0} [OPTIONS] number-of-moves'.format(sys.argv[0]))
+    print('OPTIONS:')
+    print('  -d / --double-actions')
+    print('  -o / --output filename.pddl  -- This is mandatory option')
+    print('  -p / --plan-output filename.plan')
+    print('  -s / --seed seed')
     sys.exit(-1)
 
 if __name__ == '__main__':
     double_actions = False
     moves = None
-    validate = None
     output = None
     plan_output = None
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'do:s:',
+        opts, args = getopt.getopt(sys.argv[1:], 'do:s:p:',
                                    ['double-actions', 'output=',
                                     'plan-output=', 'seed='])
     except getopt.GetoptError as err:
@@ -292,12 +303,13 @@ if __name__ == '__main__':
             double_actions = True
         elif o in ['-o', '--output']:
             output = a
-        elif o in ['--plan-output']:
+        elif o in ['-p', '--plan-output']:
             plan_output = a
-        elif o in ['--validate']:
-            validate = a
         elif o in ['-s', '--seed']:
             random.seed(int(a))
+
+    if output is None:
+        usage()
 
     if double_actions:
         actions = cube_actions.keys()
@@ -315,5 +327,6 @@ if __name__ == '__main__':
             fout.write(pddl)
 
     if plan_output is not None:
-        with open(plan_output, 'w') as fout:
-            fout.write(plan)
+        solve(output, plan_output)
+        #with open(plan_output, 'w') as fout:
+        #    fout.write(plan)
