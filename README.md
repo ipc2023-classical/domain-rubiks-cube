@@ -1,7 +1,7 @@
 # Rubik's Cube PDDL Domain
 
-PDDL domain of the famous Rubik's Cube puzzle modelled with conditional
-effects that are hard to compile away.
+PDDL domain of the famous [Rubik's Cube](https://en.wikipedia.org/wiki/Rubik%27s_Cube)
+puzzle modelled with conditional effects that are hard to compile away.
 
 This domain was submitted to International Planning Competition 2023 by
  - Bharath Muppasani <BHARATH@email.sc.edu>,
